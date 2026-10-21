@@ -1,0 +1,27 @@
+name: Build AU Plugin
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install JUCE
+        run: |
+          git clone --depth 1 https://github.com/juce-framework/JUCE.git
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DJUCE_DIR=JUCE
+
+      - name: Build
+        run: |
+          cmake --build build --config Release
+
+      - name: Upload AU Plugin
+        uses: actions/upload-artifact@v3
+        with:
+          name: MasterBus-AU
+          path: build/MasterBus_artefacts/Release/AU/
